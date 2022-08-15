@@ -24,6 +24,11 @@ TODO: Once the code is pull from github to your local machine, the first to do i
 ## Credits
 
 TO: Isintume Jennifer
+
+## License
+
+TODO: This is just simple CRUD operation that allow dummy money for test purpose.
+
 ]]></content>
 <tabTrigger>readme</tabTrigger>
 </snippet>
