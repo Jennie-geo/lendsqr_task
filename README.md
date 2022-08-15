@@ -21,17 +21,3 @@ TO: Isintume Jennifer
 ]]></content>
   <tabTrigger>readme</tabTrigger>
 </snippet>
-
-<snippet>
-  <content><![CDATA[
-# ${1:}
-TODO: 
-## Installation
-TODO: 
-## Usage: Pulling from github
-TODO:
-
-TODO: Write license
-]]></content>
-<tabTrigger>readme</tabTrigger>
-</snippet>
