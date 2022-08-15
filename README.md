@@ -1,5 +1,3 @@
-# lendsqr_task
-
 <snippet>
   <content><![CDATA[
 # ${1:Cash Transaction Project}
@@ -9,10 +7,9 @@ Secondly, A user authentication is required before the user can access his/her p
 
 ## Installation
 
-TODO: This project used Nodejs, express, Knexjs orm, typescript and jest for unit testing.
-knexjs was install globally to allow the use of knex cli. knex cli was used to create the migration files which contains the two migration files(users schema and account schema). Express, typescript,jest and other packages that the project needs were installed using npm. The mysql database was mock to enable testing of the enpoints. Heroku was use for deployment and the code was pushed to github
+TODO: This project used Nodejs, express, Knexjs orm, typescript and jest for unit testing. knexjs was install globally to allow the use of knex cli. knex cli was used to create the migration files which contains the two migration files(users schema and account schema). Express, typescript,jest and other packages that the project needs were installed using npm. The mysql database was mock to enable testing of the enpoints. Heroku was use for deployment and the code was pushed to github
 
-## Usage
+### Usage
 
 TODO: Once the code is pull from github to your local machine, the first to do is to use the command `git install` to install all the dependencies that the app needs to run. Then, in the .env.example file is where database connection strings sample were set. Just fill it with your mysql details. run `yarn tsc` to compile the typescript files and then start your server using `npm run dev`. The NODE_ENV is set to "development" in the .env file. Before running your test, it will be change to "test" as i have in the knexfile.ts where our test database configuration was done. you can run the test with `npm run test`
 
