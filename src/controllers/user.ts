@@ -120,7 +120,10 @@ export async function addMoneyToAcct(req: CustomRequest, res: Response) {
         .json({ success: false, errorMessage: "User account doesn't exist" });
     }
 
-    if (userInfo.account_number !== accountNumber) {
+    if (
+      userInfo.account_number !== accountNumber ||
+      userInfo.account_number === ""
+    ) {
       return res.status(400).json({
         success: false,
         errorMessage: "The account number does not match",

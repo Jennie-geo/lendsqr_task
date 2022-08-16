@@ -6,8 +6,8 @@ import app from "../app";
 let superTestServer: SuperTest<Test>;
 beforeAll(async () => {
   superTestServer = request(app);
-  await db.from("users").del();
   await db.from("accounts").del();
+  await db.from("users").del();
 });
 
 const httpStatusCode = {
@@ -92,6 +92,24 @@ describe("SignUp", () => {
         .send({ amountToSend: 1000, accountNumber: account_number })
         .expect(httpStatusCode.SUCCESS);
     });
+
+    test("check if account number doen't match with logged in user acct number", async () => {
+      const { token, account_number } = store;
+      await superTestServer
+        .post(addMoneyPath)
+        .set("Authorization", `bearer ${token}`)
+        .send({ amountToSend: 100, account_number: 234123 })
+        .expect(httpStatusCode.BAD_REQUEST);
+    });
+
+    test("check if account number is empty", async () => {
+      const { token, account_number } = store;
+      await superTestServer
+        .post(addMoneyPath)
+        .set("Authorization", `bearer ${token}`)
+        .send({ amountToSend: 100, account_number: "" })
+        .expect(httpStatusCode.BAD_REQUEST);
+    });
   });
   describe("Withdraw money", () => {
     const withdrawMoneyPath = "/user/account/cash-withdraw";
@@ -103,8 +121,17 @@ describe("SignUp", () => {
         .send({ amount: 100, accountNumber: account_number })
         .expect(httpStatusCode.SUCCESS);
     });
+
+    test("balance cannot be less than the amount to withdraw", async () => {
+      const { token, account_number } = store;
+      await superTestServer
+        .post(withdrawMoneyPath)
+        .set("Authorization", `bearer ${token}`)
+        .send({ amount: 2000, accountNumber: account_number })
+        .expect(httpStatusCode.BAD_REQUEST);
+    });
   });
-  //   describe("Transfer money to another user", () => {
-  //     const sendMoney = `/user//account/cash-transfer/:${id}`;
-  //   });
+  // describe("Transfer money to another user", () => {
+  //   const sendMoney = `/user/account/cash-transfer/:${id}`;
+  // });
 });
