@@ -64,7 +64,6 @@ function normalizePort(val: string) {
 
   return false;
 }
-console.log("hello me");
 /**
  * Event listener for HTTP server "error" event.
  */
