@@ -2,12 +2,22 @@ import { Request, Response, NextFunction } from "express";
 import db from "../database/db";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-interface CustomeRequest extends Request {
-  user: string;
+export interface CustomRequest extends Request {
+  user?: User;
 }
-
+interface User {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  account_number: string;
+  balance?: number;
+  created_at: string;
+  updated_at: string;
+}
 export function authlogin(
-  req: CustomeRequest,
+  req: CustomRequest,
   res: Response,
   next: NextFunction
 ): any {
@@ -27,11 +37,12 @@ export function authlogin(
         iat: number;
         exp: number;
       };
-      const user = await db.from("users").where("id", userId);
+
+      const user = await db("users").where("id", userId).first();
       if (!user) {
         return res.send({ login: `No User exists with this ${userId}` });
       }
-      req.user = userId;
+      req.user = user;
       next();
     }
   });

@@ -11,7 +11,7 @@ import {
   withdrawAmount,
   seePersonalProfile,
 } from "../controllers/user";
-import { authlogin } from "../middleware/authlogin copy";
+import { authlogin } from "../middleware/authlogin";
 
 router.get("/account/allusers", allusers);
 router.get("/account/singleuser/:id", authlogin, singleUserAcct);

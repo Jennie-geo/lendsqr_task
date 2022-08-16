@@ -3,7 +3,7 @@ import db from "../database/db";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
-import { CustomRequest } from "../middleware/authlogin copy";
+import { CustomRequest } from "../middleware/authlogin";
 import { SQL_ERRORS } from "../utils";
 require("dotenv").config();
 

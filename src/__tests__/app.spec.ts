@@ -22,6 +22,8 @@ const httpStatusCode = {
 afterAll(async () => {
   await db.from("accounts").del();
   await db.from("users").del();
+
+  //superTestServer.cl
 });
 
 const newUserDetails = {
