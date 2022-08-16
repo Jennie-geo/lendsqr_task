@@ -62,4 +62,5 @@ typings/
 .next
 
 #typescript compile file
+dist
 .DS_STORE
