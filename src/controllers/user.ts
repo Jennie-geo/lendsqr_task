@@ -162,10 +162,11 @@ export async function sendMoneyToAnotherAccount(
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorize." });
     }
+    const accountId = uuidv4();
     const { amountToSend, accountNumber } = req.body;
-
+    console.log("amount", amountToSend);
     const sender = await db.from("users").where("id", req.user.id).first();
-    if (sender.balance <= amountToSend) {
+    if (sender.balance < amountToSend) {
       return res
         .status(400)
         .json({ success: false, errorMessage: "Insufficient fund!" });
@@ -183,12 +184,18 @@ export async function sendMoneyToAnotherAccount(
           "Either the user doesn't exist or your account number is wrong",
       });
     }
-    const sendMoney = await db("accounts").insert({
-      id: uuidv4(),
+    await db("accounts").insert({
+      id: accountId,
       userId: receiver.id,
       amount: amountToSend,
       senderId: sender.id,
     });
+    const sendMoney = (
+      await db("accounts")
+        .select(["id", "userId", "amount", "senderId"])
+        .where({ id: accountId })
+    )[0];
+
     await db("users")
       .where("id", sender.id)
       .update({
@@ -259,8 +266,16 @@ export async function withdrawAmount(req: CustomRequest, res: Response) {
 }
 export async function allusers(req: Request, res: Response) {
   try {
-    db("users")
-      .select()
+    await db("users")
+      .select(
+        "id",
+        "first_name",
+        "last_name",
+        "email",
+        "account_number",
+        "balance",
+        "created_at"
+      )
       .then((users) => {
         res.status(200).json({ success: true, data: users });
       });
@@ -271,19 +286,27 @@ export async function allusers(req: Request, res: Response) {
   }
 }
 
-export async function singleUserAcct(req: Request, res: Response) {
+export async function singleUserAcct(req: CustomRequest, res: Response) {
   try {
-    db("users")
-      .select()
-      .where("id", req.params.id)
-      .then(function (user) {
-        return res.status(200).json({ success: true, message: user });
-      })
-      .catch((error) => {
-        return res
-          .status(400)
-          .json({ success: false, errorMessage: "No user with id exist" });
-      });
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorize." });
+    }
+    const { id } = req.params;
+    await db("users").where({ id: id });
+
+    const userDetail = (
+      await db
+        .from("users")
+        .select(
+          "id",
+          "first_name",
+          "last_name",
+          "balance",
+          "account_number",
+          "created_at"
+        )
+    )[0];
+    return res.status(200).json({ success: true, message: userDetail });
   } catch (error: any) {
     return res
       .status(500)
