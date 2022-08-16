@@ -110,7 +110,6 @@ export async function loginUser(req: Request, res: Response) {
       });
     }
   } catch (error: any) {
-    console.log("ERROR", error);
     return res
       .status(500)
       .json({ success: false, errorMessage: error.message });
