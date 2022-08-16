@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./src/server.ts",
+    "start": "nodemon ./src/server.ts",
     "pretest": "dotenv -e .env.test -- ./node_modules/.bin/knex --knexfile src/database/knexfile.ts migrate:latest",
     "test": "jest --watchAll app.spec.ts",
     "test_coverage": "jest --coverage -c ./jest.unit.json",
