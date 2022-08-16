@@ -11,7 +11,7 @@ TODO: This project used Nodejs, express, Knexjs orm, typescript and jest for uni
 
 ### Usage
 
-TODO: Once the code is pull from github to your local machine, the first to do is to use the command `git install` to install all the dependencies that the app needs to run. Then, in the .env.example file is where database connection strings sample were set. Just fill it with your mysql details. run `yarn tsc` to compile the typescript files and then start your server using `npm run dev`. The NODE_ENV is set to "development" in the .env file. Before running your test, it will be change to "test" as i have in the knexfile.ts where our test database configuration was done. A test database will be created in mysql Db and the name will be set as directed in the .env.example file. you can run the test with `npm run test`
+TODO: Once the code is pull from github to your local machine, the first thing to do is to use the command `git install` to install all the dependencies that the app needs to run. Then, in the .env.example file is where database connection strings sample were set. Just fill it with your mysql details. run `yarn tsc` to compile the typescript files and then start your server using `npm run dev`. The NODE_ENV is set to "development" in the .env file. Before running your test, it will be change to "test" as i have in the knexfile.ts where our test database configuration was done. A test database will be created in mysql Db and the name will be set as directed in the .env.example file. you can run the test with `npm run test`
 
 ## Contributing
 
@@ -23,7 +23,7 @@ TODO: Once the code is pull from github to your local machine, the first to do i
 
 ## Credits
 
-TO: Isintume Jennifer
+TODO: Isintume Jennifer
 
 ## License
 

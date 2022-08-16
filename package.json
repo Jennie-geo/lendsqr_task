@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./src/server.ts",
-    "test1": "jest --watchAll",
-    "test": "jest -c ./jest.unit.json",
+    "pretest": "dotenv -e .env.test -- ./node_modules/.bin/knex --knexfile src/database/knexfile.ts migrate:latest",
+    "test": "jest --watchAll app.spec.ts",
     "test_coverage": "jest --coverage -c ./jest.unit.json",
-    "knex": "dotenv -e .env.test -- ./node_modules/.bin/knex --knexfile src/database/knexfile.ts"
+    "knex": "dotenv -e .env.test -- ./node_modules/.bin/knex --knexfile src/database/knexfile.ts migrate:latest"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +30,7 @@
   "devDependencies": {
     "@babel/core": "^7.18.10",
     "@babel/preset-env": "^7.18.10",
+    "@babel/preset-typescript": "^7.18.6",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/debug": "^4.1.7",

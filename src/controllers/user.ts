@@ -4,6 +4,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import { CustomRequest } from "../middleware/authlogin copy";
+import { SQL_ERRORS } from "../utils";
 require("dotenv").config();
 
 const userDetail = {
@@ -22,18 +23,33 @@ export async function createUser(req: Request, res: Response) {
   try {
     const accountNum = Math.floor(100000 + Math.random() * 90000000000);
     const hashPasswd = await bcrypt.hash(req.body.password, 8);
-    const user = await db("users").insert({
-      id: uuidv4(),
+    const userId = uuidv4();
+    await db("users").insert({
+      id: userId,
       first_name: req.body.firstName,
       last_name: req.body.lastName,
       email: req.body.email,
       password: hashPasswd,
       account_number: accountNum,
     });
+    const user = (
+      await db
+        .from("users")
+        .select(["id", "first_name", "last_name", "email", "account_number"])
+        .where({ id: userId })
+    )[0];
+
     return res
-      .status(200)
+      .status(201)
       .json({ success: true, message: "User signup successfully", data: user });
   } catch (error: any) {
+    console.log(JSON.stringify(error, null, 2));
+    if (error.errno === SQL_ERRORS.ER_DUP_ENTRY) {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot create account with existing email",
+      });
+    }
     return res
       .status(500)
       .json({ success: false, errorMessage: error.message });
@@ -72,10 +88,10 @@ export async function loginUser(req: Request, res: Response) {
         { userId: userDetail.id },
         process.env.JWT_SECRET as string,
         {
-          expiresIn: "365d",
+          expiresIn: "2h",
         }
       );
-      res.setHeader("Authorization", token);
+
       return res.status(200).json({
         success: true,
         message: "Auth successful",
@@ -257,6 +273,31 @@ export async function singleUserAcct(req: Request, res: Response) {
     db("users")
       .select()
       .where("id", req.params.id)
+      .then(function (user) {
+        return res.status(200).json({ success: true, message: user });
+      })
+      .catch((error) => {
+        return res
+          .status(400)
+          .json({ success: false, errorMessage: "No user with id exist" });
+      });
+  } catch (error: any) {
+    return res
+      .status(500)
+      .json({ success: false, errorMessage: error.message });
+  }
+}
+
+export async function seePersonalProfile(req: CustomRequest, res: Response) {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorize." });
+    }
+    const user = req.user;
+
+    db("users")
+      .where("id", user.id)
+      .first()
       .then(function (user) {
         return res.status(200).json({ success: true, message: user });
       })

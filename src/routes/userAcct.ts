@@ -9,11 +9,13 @@ import {
   addMoneyToAcct,
   sendMoneyToAnotherAccount,
   withdrawAmount,
+  seePersonalProfile,
 } from "../controllers/user";
 import { authlogin } from "../middleware/authlogin copy";
 
 router.get("/account/allusers", allusers);
-router.get("/account/singleuser/:id", singleUserAcct);
+router.get("/account/singleuser/:id", authlogin, singleUserAcct);
+router.get("/account/personalprofile", authlogin, seePersonalProfile);
 router.post("/account/create-acct", createUser);
 router.post("/account/login", loginUser);
 router.post("/account/credit-user-account", authlogin, addMoneyToAcct);
