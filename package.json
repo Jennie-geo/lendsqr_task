@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node dist/server.js",
-    "start": "ts-node ./src/server.ts",
+    "start": "node dist/server.js",
+    "dev": "nodemon ./src/server.ts",
     "pretest": "dotenv -e .env.test -- ./node_modules/.bin/knex --knexfile src/database/knexfile.ts migrate:latest",
     "test": "jest --watchAll app.spec.ts",
     "knex": "dotenv -e .env.test -- ./node_modules/.bin/knex --knexfile src/database/knexfile.ts migrate:latest"

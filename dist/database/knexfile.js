@@ -8,7 +8,7 @@ dotenv_1.default.config();
 // Update with your config settings.
 const configs = {
     development: {
-        client: process.env.DATABASE_CLIENT,
+        client: "mysql",
         connection: {
             host: process.env.DATABASE_HOST,
             port: Number(process.env.DATABASE_PORT),
