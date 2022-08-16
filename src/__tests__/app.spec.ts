@@ -19,7 +19,10 @@ const httpStatusCode = {
   INTERAL_SERVER_ERROR: 500,
   NOT_FOUND: 404,
 };
-afterAll(() => {});
+afterAll(async () => {
+  await db.from("accounts").del();
+  await db.from("users").del();
+});
 
 const newUserDetails = {
   firstName: "Janes",
@@ -36,11 +39,9 @@ const secondUserDetails = {
 };
 
 let store = { token: "", account_number: "" };
-let secondUserStore = { token: "", account_number: "" };
+const signUpUrl = "/user/account/create-acct";
 
 describe("SignUp", () => {
-  const signUpUrl = "/user/account/create-acct";
-
   test("should allow user to create account", async () => {
     await superTestServer
       .post(signUpUrl)
@@ -63,22 +64,6 @@ describe("SignUp", () => {
       .send(newUserDetails)
       .expect(httpStatusCode.BAD_REQUEST)
       .expect((res) => expect(res.body.success).toBe(false));
-  });
-
-  test("should allow second user to create account", async () => {
-    await superTestServer
-      .post(signUpUrl)
-      .send(secondUserDetails)
-      .expect((res) => {
-        const { first_name, last_name, email, account_number } = res.body.data;
-        const status = res.statusCode;
-        expect(first_name).toBe(secondUserDetails.firstName);
-        expect(last_name).toBe(secondUserDetails.lastName);
-        expect(email).toBe(secondUserDetails.email);
-        expect(status).toBe(httpStatusCode.CREATED);
-        // save account number for new signed up user for later test;
-        secondUserStore.account_number = account_number;
-      });
   });
 });
 
@@ -161,14 +146,27 @@ describe("Withdraw money", () => {
 });
 
 describe("Transfer money to another user", () => {
-  const id = "b8c041a2-5cc2-4e6d-9835-6f776a854bda";
-  const receiverAccountNum = "78545696632";
-  const sendMoney = `/user/account/cash-transfer/${id}`;
+  const sendMoney = `/user/account/cash-transfer`;
+  let receiverAccountNum: string;
+  let receiverId: string;
+  beforeAll(async () => {
+    // create secondaccount
+    await superTestServer
+      .post(signUpUrl)
+      .send(secondUserDetails)
+      .expect(httpStatusCode.CREATED)
+      .expect((res) => {
+        const { account_number, id } = res.body.data;
+        receiverAccountNum = account_number;
+        receiverId = id;
+      });
+  });
 
   test("should the user balance be lesser than the amount to send", async () => {
-    const { token, account_number } = store;
+    const { token } = store;
+
     await superTestServer
-      .post(sendMoney)
+      .post(`${sendMoney}/${receiverId}`)
       .set("Authorization", `bearer ${token}`)
       .send({ amountToSend: 1000, accountNumber: receiverAccountNum })
       .expect(httpStatusCode.BAD_REQUEST);
@@ -177,15 +175,16 @@ describe("Transfer money to another user", () => {
   test("should test if there is no receiver accountNumber", async () => {
     const { token } = store;
     await superTestServer
-      .post(sendMoney)
+      .post(`${sendMoney}/${receiverId}`)
       .set("Authorization", `bearer ${token}`)
-      .send({ amountToSend: 300, accountNumber: undefined })
+      .send({ amountToSend: 300 })
       .expect(httpStatusCode.BAD_REQUEST);
   });
   test("should test if there is a receiver accountNumber", async () => {
     const { token } = store;
+    console.log("receiverAccountNo::", receiverAccountNum);
     await superTestServer
-      .post(sendMoney)
+      .post(`${sendMoney}/${receiverId}`)
       .set("Authorization", `bearer ${token}`)
       .send({ amountToSend: 300, accountNumber: receiverAccountNum })
       .expect(httpStatusCode.SUCCESS);

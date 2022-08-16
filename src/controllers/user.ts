@@ -164,7 +164,12 @@ export async function sendMoneyToAnotherAccount(
     }
     const accountId = uuidv4();
     const { amountToSend, accountNumber } = req.body;
-    console.log("amount", amountToSend);
+    if (!amountToSend || !accountNumber) {
+      return res.status(400).json({
+        success: false,
+        errorMessage: "amountTosend and accountNumber must be provided",
+      });
+    }
     const sender = await db.from("users").where("id", req.user.id).first();
     if (sender.balance < amountToSend) {
       return res
@@ -180,8 +185,7 @@ export async function sendMoneyToAnotherAccount(
     if (!receiver || receiver.account_number !== accountNumber) {
       return res.status(400).json({
         success: false,
-        errorMessage:
-          "Either the user doesn't exist or your account number is wrong",
+        errorMessage: "Recipient does not exist.",
       });
     }
     await db("accounts").insert({
