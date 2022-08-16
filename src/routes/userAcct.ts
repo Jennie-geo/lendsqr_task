@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 
 import {
+  landPage,
   allusers,
   singleUserAcct,
   createUser,
@@ -13,6 +14,7 @@ import {
 } from "../controllers/user";
 import { authlogin } from "../middleware/authlogin";
 
+router.get("/", landPage);
 router.get("/account/allusers", allusers);
 router.get("/account/singleuser/:id", authlogin, singleUserAcct);
 router.get("/account/personalprofile", authlogin, seePersonalProfile);

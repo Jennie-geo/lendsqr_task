@@ -4,7 +4,7 @@ dotenv.config();
 // Update with your config settings.
 const configs: { [key: string]: Knex.Config } = {
   development: {
-    client: "mysql",
+    client: process.env.DATABASE_CLIENT,
     connection: {
       host: process.env.DATABASE_HOST,
       port: Number(process.env.DATABASE_PORT),

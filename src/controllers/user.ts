@@ -18,6 +18,17 @@ const userDetail = {
   created_at: "",
   updated_at: "",
 };
+export async function landPage(req: Request, res: Response) {
+  try {
+    return res
+      .status(200)
+      .json({ success: true, message: "Welcome to the homepage" });
+  } catch (error: any) {
+    return res
+      .status(500)
+      .json({ success: false, errorMessage: error.message });
+  }
+}
 
 export async function createUser(req: Request, res: Response) {
   try {
