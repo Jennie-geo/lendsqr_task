@@ -2,7 +2,7 @@
   <content><![CDATA[
 # ${1:Cash Transaction Project}
 
-TODO: This application allows users to create an account using firstName, lastName, email, and password. After signup, a unique identifier will be assigned to the user. Also, the user gets an account number for transactions.
+TODO: This application allows users to create an account using firstName, lastName, email, and password. After signup, a unique identifier will be assigned to the user. The user's password will be hash for safety reasons. The user gets an account number for transactions at the point of registration.
 User authentication is required before the user can access her profile. That means a user will log in to generate a token that will be set at the header before accessing any routes. It makes unauthorized users not access any profile that does belong to them. There are different endpoints in this project. At a successful login, A user can fund her account or send money to another user's account. Some checks were put in place before a user can send money to another user. I checked if the user's account number truly belongs to the user, if is there any money in the account which she is sending money from, is the available balance less than the amount she wants to send. When all these checks are passed, that is when the user can successfully transfer the money. And when that happens, The amount transferred will be deducted from the sender's balance, and the receiver's balance will be credited with that amount. Some endpoints check a single user's account details and gets all the users' details.
 
 ## Installation
